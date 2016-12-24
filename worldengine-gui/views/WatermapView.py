@@ -11,14 +11,14 @@ class WatermapView(object):
     def draw(world, canvas):
         width = world.width
         height = world.height
-        th = world.watermap['thresholds']['river']
+        th = world.layers['watermap'].thresholds['river']
         for y in range(0, height):
             for x in range(0, width):
                 if world.is_ocean((x, y)):
                     r = g = 0
                     b = 255
                 else:
-                    w = world.watermap['data'][y][x]
+                    w = world.layers['watermap'].data[y][x]
                     if w > th:
                         r = g = 0
                         b = 255

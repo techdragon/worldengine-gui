@@ -12,8 +12,8 @@ class PrecipitationsView(object):
     def draw(world, canvas):
         width = world.width
         height = world.height
-        low_th = world.precipitation['thresholds'][0][1]
-        med_th = world.precipitation['thresholds'][1][1] - 0.10
+        low_th = world.layers['precipitation'].thresholds[0][1]
+        med_th = world.layers['precipitation'].thresholds[1][1] - 0.10
         hig_th = med_th + 0.25
         color1 = (0, 47, 255)
         color2 = (0, 255, 255)
@@ -22,7 +22,7 @@ class PrecipitationsView(object):
         color5 = (255, 0, 0)
         for y in range(0, height):
             for x in range(0, width):
-                p = world.precipitation['data'][y][x]
+                p = world.layers['precipitation'].data[y][x]
                 if world.is_ocean((x, y)):
                     r = g = b = 255
                 elif p < low_th:

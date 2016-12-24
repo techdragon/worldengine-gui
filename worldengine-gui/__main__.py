@@ -2,7 +2,7 @@
 """
 PyQt5 GUI Interface for Worldengine
 """
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QColor
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QAction, \
     QFileDialog, QLabel, QWidget, QGridLayout, QPushButton, QLineEdit, QSpinBox
 import platec
@@ -240,6 +240,8 @@ class MapCanvas(QImage):
     def _update(self):
         self.label.setPixmap(QPixmap.fromImage(self))
 
+    def set_pixel(self, x, y, col):
+        self.setPixel(x, y, QColor(*col).rgb())
 
 class OperationDialog(QDialog):
     def __init__(self, parent, world, operation):

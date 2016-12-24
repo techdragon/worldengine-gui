@@ -1,5 +1,7 @@
 from PyQt5 import QtGui
 
+import worldengine as we
+import worldengine.draw
 
 class WatermapView(object):
 
@@ -9,20 +11,4 @@ class WatermapView(object):
 
     @staticmethod
     def draw(world, canvas):
-        width = world.width
-        height = world.height
-        th = world.layers['watermap'].thresholds['river']
-        for y in range(0, height):
-            for x in range(0, width):
-                if world.is_ocean((x, y)):
-                    r = g = 0
-                    b = 255
-                else:
-                    w = world.layers['watermap'].data[y][x]
-                    if w > th:
-                        r = g = 0
-                        b = 255
-                    else:
-                        r = g = b = 0
-                col = QtGui.QColor(r, g, b)
-                canvas.setPixel(x, y, col.rgb())
+        we.draw.draw_ocean(world.layers['ocean'].data, canvas)

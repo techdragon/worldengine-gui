@@ -9,10 +9,9 @@ import platec
 import random
 import sys
 import threading
-from worldengine.world import World, Step
-from worldengine.common import array_to_matrix
+from worldengine.model.world import World, Step
 from worldengine.generation import ErosionSimulation
-from view import draw_bw_elevation_on_screen, draw_land_on_screen, \
+from .view import draw_bw_elevation_on_screen, draw_land_on_screen, \
     draw_plates_and_elevation_on_screen, draw_plates_on_screen
 from worldengine.plates import add_noise_to_elevation, center_land, \
     initialize_ocean_and_thresholds, place_oceans_at_map_borders
@@ -23,9 +22,11 @@ from worldengine.simulations.temperature import TemperatureSimulation
 from worldengine.simulations.permeability import PermeabilitySimulation
 from worldengine.simulations.biome import BiomeSimulation
 from worldengine.simulations.precipitation import PrecipitationSimulation
-from views.PrecipitationsView import PrecipitationsView
-from views.WatermapView import WatermapView
+from .views.PrecipitationsView import PrecipitationsView
+from .views.WatermapView import WatermapView
 
+def array_to_matrix():
+    raise Exception("not implemented")
 
 class GenerateDialog(QDialog):
     def __init__(self, parent):
@@ -527,7 +528,7 @@ class WorldEngineGui(QMainWindow):
     def _on_open(self):
         filename = QFileDialog.getOpenFileName(self, "Open world", "",
                                                      "*.world")
-        world = World.open_protobuf(filename)
+        world = World.open_protobuf(filename[0])
         self.set_world(world)
 
     def _on_precipitations(self):

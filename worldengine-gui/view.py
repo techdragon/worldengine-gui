@@ -8,7 +8,7 @@ def draw_simple_elevation_on_screen(world, canvas):
     height = world.height
     for y in range(0, height):
         for x in range(0, width):
-            e = world.elevation['data'][y][x]
+            e = world.layers['elevation'].data[y][x]
             r, g, b = elevation_color(e)
             col = QtGui.QColor(int(r * 255), int(g * 255), int(b * 255))
             canvas.setPixel(x, y, col.rgb())
@@ -22,7 +22,7 @@ def draw_bw_elevation_on_screen(world, canvas):
     delta_el = max_el - min_el
     for y in range(0, height):
         for x in range(0, width):
-            e = world.elevation['data'][y][x]
+            e = world.layers['elevation'].data[y][x]
             e_normalized = (e - min_el) / delta_el
             r = g = b = e_normalized
             col = QtGui.QColor(int(r * 255), int(g * 255), int(b * 255))
@@ -92,7 +92,7 @@ def draw_plates_and_elevation_on_screen(world, canvas):
     for y in range(0, height):
         for x in range(0, width):
             h = world.plates[y][x] * (360 / n_plates)
-            el = world.elevation['data'][y][x]
+            el = world.layers['elevation'].data[y][x]
             s = 0.6
             i = 40.0 + 60.0 * ((el - min_el) / delta_el)
             r, g, b = hsi_to_rgb(h, s, i)

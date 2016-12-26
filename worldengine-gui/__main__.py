@@ -220,7 +220,14 @@ class MapLabel(QLabel):
 
     def mouseMoveEvent(self, event):
         pos = (event.x(), event.y())
-        self.target.setText("Position:{}\nBiome:{}".format(pos,self.world.biome_at(pos).name()))
+        self.target.setText("Position: {}\n Biome: {}\nTemperature: {}\nHumidity: {}\nPrecipitations: {}\nWatermap: {}".
+                            format(pos,
+                                   self.world.biome_at(pos).name(),
+                                   self.world.temperature_at(pos),
+                                   self.world.humidity_at(pos),
+                                   self.world.precipitations_at(pos),
+                                   str(self.world.watermap_at(pos)),
+                            ))
 
 class MapCanvas(QImage):
     def __init__(self, label, width, height):

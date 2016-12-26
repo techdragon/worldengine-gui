@@ -220,9 +220,10 @@ class MapLabel(QLabel):
 
     def mouseMoveEvent(self, event):
         pos = (event.x(), event.y())
-        self.target.setText("Position: {}\n Biome: {}\nTemperature: {}\nHumidity: {}\nPrecipitations: {}\nWatermap: {}".
+        self.target.setText("Position: {}\nBiome: {}\nElevation: {}\nTemperature: {}\nHumidity: {}\nPrecipitations: {}\nWatermap: {}".
                             format(pos,
                                    self.world.biome_at(pos).name(),
+                                   self.world.elevation_at(pos),
                                    self.world.temperature_at(pos),
                                    self.world.humidity_at(pos),
                                    self.world.precipitations_at(pos),

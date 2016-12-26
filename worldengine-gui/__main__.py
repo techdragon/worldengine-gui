@@ -213,6 +213,14 @@ class PlatesGeneration(object):
         return world
 
 
+class MapLabel(QLabel):
+    def __init__(self, target):
+        super(QLabel, self).__init__()
+        self.target = target
+
+    def mouseMoveEvent(self, event):
+        self.target.setText(str(event.pos()))
+
 class MapCanvas(QImage):
     def __init__(self, label, width, height):
         QImage.__init__(self, width, height, QImage.Format_RGB32)
@@ -221,6 +229,7 @@ class MapCanvas(QImage):
 
     def draw_world(self, world, view):
         self.label.resize(world.width, world.height)
+        self.label.setMouseTracking(True)
         if view == 'bw':
             draw_bw_elevation_on_screen(world, self)
         elif view == 'plates':
@@ -239,7 +248,6 @@ class MapCanvas(QImage):
 
     def _update(self):
         self.label.setPixmap(QPixmap.fromImage(self))
-
 
 class OperationDialog(QDialog):
     def __init__(self, parent, world, operation):
@@ -313,7 +321,6 @@ class SimulationOp(object):
         ui.set_status("%s: done (seed %i)" % (self.title(), seed))
         ui.on_finish()
 
-
 class WorldEngineGui(QMainWindow):
     def __init__(self):
         super(WorldEngineGui, self).__init__()
@@ -330,7 +337,8 @@ class WorldEngineGui(QMainWindow):
         self.setWindowTitle('Worldengine - A world generator')
         self.set_status('No world selected: create or load a world')
         self._prepare_menu()
-        self.label = QLabel()
+        self.label2 = QLabel()
+        self.label = MapLabel(self.label2)
         self.canvas = MapCanvas(self.label, 0, 0)
 
         # dummy widget to contain the layout manager
@@ -345,12 +353,17 @@ class WorldEngineGui(QMainWindow):
         self.layout.setRowStretch(2, 1)
         # Add widgets
         self.layout.addWidget(self.label, 1, 1)
+        self.layout.addWidget(self.label2, 1, 2)
+
+        self.setMouseTracking(True)
+
         self.show()
 
     def set_world(self, world):
         self.world = world
         self.canvas = MapCanvas(self.label, self.world.width,
                                 self.world.height)
+        self.label2.setText("Mouseover")
         self._on_bw_view()
 
         self.saveproto_action.setEnabled(world is not None)

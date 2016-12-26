@@ -219,7 +219,8 @@ class MapLabel(QLabel):
         self.target = target
 
     def mouseMoveEvent(self, event):
-        self.target.setText(str(event.pos()))
+        pos = (event.x(), event.y())
+        self.target.setText("Position:{}\nBiome:{}".format(pos,self.world.biome_at(pos).name()))
 
 class MapCanvas(QImage):
     def __init__(self, label, width, height):
@@ -364,6 +365,7 @@ class WorldEngineGui(QMainWindow):
         self.canvas = MapCanvas(self.label, self.world.width,
                                 self.world.height)
         self.label2.setText("Mouseover")
+        self.label.world = world
         self._on_bw_view()
 
         self.saveproto_action.setEnabled(world is not None)

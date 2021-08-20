@@ -2,6 +2,7 @@
 """
 PyQt5 GUI Interface for Worldengine
 """
+import numpy
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QAction, \
     QFileDialog, QLabel, QWidget, QGridLayout, QPushButton, QLineEdit, QSpinBox
@@ -9,9 +10,10 @@ import platec
 import random
 import sys
 import threading
-from worldengine.model.world import World, Step
+from worldengine.model.world import World, Size, GenerationParameters
+from worldengine.step import Step
 from worldengine.generation import ErosionSimulation
-from .view import draw_bw_elevation_on_screen, draw_land_on_screen, \
+from view import draw_bw_elevation_on_screen, draw_land_on_screen, \
     draw_plates_and_elevation_on_screen, draw_plates_on_screen
 from worldengine.plates import add_noise_to_elevation, center_land, \
     initialize_ocean_and_thresholds, place_oceans_at_map_borders
@@ -22,11 +24,13 @@ from worldengine.simulations.temperature import TemperatureSimulation
 from worldengine.simulations.permeability import PermeabilitySimulation
 from worldengine.simulations.biome import BiomeSimulation
 from worldengine.simulations.precipitation import PrecipitationSimulation
-from .views.PrecipitationsView import PrecipitationsView
-from .views.WatermapView import WatermapView
+from views.PrecipitationsView import PrecipitationsView
+from views.WatermapView import WatermapView
+
 
 def array_to_matrix():
     raise Exception("not implemented")
+
 
 class GenerateDialog(QDialog):
     def __init__(self, parent):
@@ -203,13 +207,20 @@ class PlatesGeneration(object):
             return True, self.steps
 
     def world(self):
-        world = World(self.name, self.width, self.height, self.seed,
-                      self.n_plates, self.ocean_level,
-                      Step.get_by_name("plates"))
+        world = World(
+            name=self.name,
+            size=Size(self.width, self.height),
+            seed=self.seed,
+            generation_params=GenerationParameters(
+                n_plates=self.n_plates,
+                ocean_level=self.ocean_level,
+                step=Step.get_by_name("plates")
+            )
+        )
         hm = platec.get_heightmap(self.p)
         pm = platec.get_platesmap(self.p)
-        world.set_elevation(array_to_matrix(hm, self.width, self.height), None)
-        world.set_plates(array_to_matrix(pm, self.width, self.height))
+        world.elevation = (numpy.array(hm).reshape(self.width, self.height), None)
+        world.plates = numpy.array(pm, dtype=numpy.uint16).reshape(self.width, self.height)
         return world
 
 
@@ -387,7 +398,7 @@ class WorldEngineGui(QMainWindow):
         self.land_and_ocean_view.setEnabled(world is not None)
 
         self.precipitations_action.setEnabled(
-            world is not None and (not world.has_precipitations()))
+            world is not None and world.has_temperature() and (not world.has_precipitations()))
         self.watermap_action.setEnabled(
             world is not None and WatermapSimulation().is_applicable(world))
         self.irrigation_action.setEnabled(
@@ -546,7 +557,7 @@ class WorldEngineGui(QMainWindow):
     def _on_save_protobuf(self):
         filename = QFileDialog.getSaveFileName(self, "Save world", "",
                                                      "*.world")
-        self.world.protobuf_to_file(filename)
+        self.world.protobuf_to_file(filename[0])
 
     def _on_open(self):
         filename = QFileDialog.getOpenFileName(self, "Open world", "",

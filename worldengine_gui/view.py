@@ -17,8 +17,8 @@ def draw_simple_elevation_on_screen(world, canvas):
 def draw_bw_elevation_on_screen(world, canvas):
     width = world.width
     height = world.height
-    max_el = world.max_elevation()
-    min_el = world.min_elevation()
+    max_el = world.layers['elevation'].data.max()
+    min_el = world.layers['elevation'].data.min()
     delta_el = max_el - min_el
     for y in range(0, height):
         for x in range(0, width):
@@ -86,8 +86,8 @@ def draw_plates_and_elevation_on_screen(world, canvas):
     width = world.width
     height = world.height
     n_plates = world.n_actual_plates()
-    max_el = world.max_elevation()
-    min_el = world.min_elevation()
+    max_el = world.layers['elevation'].data.max()
+    min_el = world.layers['elevation'].data.min()
     delta_el = max_el - min_el
     for y in range(0, height):
         for x in range(0, width):

@@ -2,6 +2,7 @@
 """
 PyQt5 GUI Interface for Worldengine
 """
+
 import numpy
 from PyQt5.QtGui import QImage, QPixmap, QColor
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QAction, \

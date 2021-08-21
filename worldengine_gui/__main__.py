@@ -27,6 +27,7 @@ from worldengine.simulations.biome import BiomeSimulation
 from worldengine.simulations.precipitation import PrecipitationSimulation
 from views.PrecipitationsView import PrecipitationsView
 from views.WatermapView import WatermapView
+from views.BiomeView import BiomeView
 
 
 def array_to_matrix():
@@ -263,6 +264,8 @@ class MapCanvas(QImage):
             PrecipitationsView().draw(world, self)
         elif view == 'watermap':
             WatermapView().draw(world, self)
+        elif view == "biome":
+            BiomeView().draw(world, self)
         else:
             raise Exception("Unknown view %s" % view)
         self._update()
@@ -454,6 +457,8 @@ class WorldEngineGui(QMainWindow):
             self._on_precipitations_view)
         self.watermap_view = QAction('Watermap', self)
         self.watermap_view.triggered.connect(self._on_watermap_view)
+        self.watermap_view = QAction('Biome', self)
+        self.watermap_view.triggered.connect(self._on_biome_view)
 
         self.bw_view.setEnabled(False)
         self.plates_view.setEnabled(False)
@@ -542,6 +547,10 @@ class WorldEngineGui(QMainWindow):
 
     def _on_watermap_view(self):
         self.current_view = 'watermap'
+        self.canvas.draw_world(self.world, self.current_view)
+
+    def _on_biome_view(self):
+        self.current_view = 'biome'
         self.canvas.draw_world(self.world, self.current_view)
 
     def _on_generate(self):

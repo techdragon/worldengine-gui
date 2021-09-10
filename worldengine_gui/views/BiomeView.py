@@ -11,3 +11,14 @@ class BiomeView(object):
     @staticmethod
     def draw(world: World, canvas):
         worldengine.draw.draw_biome(world, canvas)
+
+
+class BiomeScatterPlotView(object):
+    @staticmethod
+    def is_applicable(world: World):
+        return world.has_biome()
+
+    @staticmethod
+    def draw(world: World, canvas):
+        worldengine.draw.draw_scatter_plot(world, world.size.height, canvas)
+

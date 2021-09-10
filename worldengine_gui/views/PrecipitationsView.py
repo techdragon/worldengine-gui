@@ -1,9 +1,10 @@
 from . import color_prop
 from PyQt5 import QtGui
+from worldengine.model.world import World
+import worldengine.draw
 
 
 class PrecipitationsView(object):
-
     @staticmethod
     def is_applicable(world):
         return world.has_precipitations()

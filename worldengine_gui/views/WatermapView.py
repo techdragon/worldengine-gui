@@ -1,5 +1,4 @@
-from PyQt5 import QtGui
-
+import worldengine.draw
 from worldengine.model.world import World
 import worldengine.draw
 
